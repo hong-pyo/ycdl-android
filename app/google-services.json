@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "893448519278",
+    "firebase_url": "https://ycdl2-a30cf.firebaseio.com",
+    "project_id": "ycdl2-a30cf",
+    "storage_bucket": "ycdl2-a30cf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:893448519278:android:40af401e1bed9d55",
+        "android_client_info": {
+          "package_name": "com.hong2.ycdl"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "893448519278-isl2id20hn35mrq9f1qs2d5k1g4ka6l6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hong2.ycdl",
+            "certificate_hash": "d36f1f3b1ede8e67ea53f7f4770bb1be99ea40c1"
+          }
+        },
+        {
+          "client_id": "893448519278-6ef28qa6d99li64u7eiu90f98589pimm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDBMxTV93k6NJnXgMdarSvUBhEJfd71goI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "893448519278-6ef28qa6d99li64u7eiu90f98589pimm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
