@@ -4,26 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
-import com.google.firebase.FirebaseApp;
-import com.hong2.ycdl.common.KaKaoSDKAdapter;
+import com.hong2.ycdl.common.user.KakaoMeDto;
 import com.hong2.ycdl.common.widget.KakaoToast;
 import com.hong2.ycdl.home.HomeActivity;
 import com.kakao.auth.ISessionCallback;
-import com.kakao.auth.KakaoAdapter;
-import com.kakao.auth.KakaoSDK;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
 import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.callback.MeV2ResponseCallback;
 import com.kakao.usermgmt.response.MeV2Response;
-import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends Activity {
 
@@ -70,24 +63,25 @@ public class MainActivity extends Activity {
     }
 
     protected void redirectSignupActivity() {
-        final Intent intent = new Intent(this, HomeActivity.class);
-        requestMe2();
-
-        startActivity(intent);
-        finish();
+        requestPersonalInfo(this, HomeActivity.class);
     }
-    private void requestMe2() {
+    private void requestPersonalInfo(final Context from, final Class<?> to) {
+        final KakaoMeDto kakaoMeDto = new KakaoMeDto();
         UserManagement.getInstance().me(new MeV2ResponseCallback() {
+
             @Override
             public void onSessionClosed(ErrorResult errorResult) {
-
+                Log.d("kakao", "fail kakao request PersonalInfo");
             }
 
             @Override
             public void onSuccess(MeV2Response result) {
-                KakaoToast.makeToast(getApplicationContext(), "Welcome Login "+ result.getNickname(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(from, to);
+                kakaoMeDto.setNickname(result.getNickname());
+                intent.putExtra("kakaoMe", kakaoMeDto);
+                startActivity(intent);
+                finish();
             }
         });
     }
-
 }
