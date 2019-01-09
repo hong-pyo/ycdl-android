@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools" package="com.hong2.ycdl">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.hong2.ycdl">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -8,6 +9,7 @@
     <!-- 연령인증 sms -->
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
             android:name=".common.GlobalApplication"
@@ -16,7 +18,8 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme" tools:ignore="GoogleAppIndexingWarning">
+            android:theme="@style/AppTheme"
+            tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -33,6 +36,8 @@
                 android:name=".home.HomeActivity"
                 android:label="@string/title_activity_home_acitivy"
                 android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity android:name=".speak.SpeakActivity">
         </activity>
     </application>
 

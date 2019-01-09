@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 import com.hong2.ycdl.common.user.KakaoMeDto;
-import com.hong2.ycdl.common.widget.KakaoToast;
 import com.hong2.ycdl.home.HomeActivity;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
@@ -17,6 +15,7 @@ import com.kakao.usermgmt.callback.MeV2ResponseCallback;
 import com.kakao.usermgmt.response.MeV2Response;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
+
 
 public class MainActivity extends Activity {
 
@@ -77,7 +76,11 @@ public class MainActivity extends Activity {
             @Override
             public void onSuccess(MeV2Response result) {
                 Intent intent = new Intent(from, to);
-                kakaoMeDto.setNickname(result.getNickname());
+                kakaoMeDto.setNickName(result.getNickname());
+                kakaoMeDto.setId(result.getId());
+                kakaoMeDto.setProfileImagePath(result.getProfileImagePath());
+                kakaoMeDto.setThumbnailImagePath(result.getThumbnailImagePath());
+                kakaoMeDto.setHasSignedUp(result.hasSignedUp());
                 intent.putExtra("kakaoMe", kakaoMeDto);
                 startActivity(intent);
                 finish();

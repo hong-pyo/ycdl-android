@@ -9,13 +9,13 @@ import java.util.Map;
 
 public class KakaoMeDto implements Serializable {
     private Long id;
-    private OptionalBoolean hasSignedUp;
+    private boolean hasSignedUp;
 
     private UserAccountDto kakaoAccount;
     private Map<String, String> properties;
     private JSONObject forPartners;
 
-    private String nickname;
+    private String nickName;
     private String thumbnailImagePath;
     private String profileImagePath;
 
@@ -27,12 +27,12 @@ public class KakaoMeDto implements Serializable {
         this.id = id;
     }
 
-    public OptionalBoolean getHasSignedUp() {
+    public boolean getHasSignedUp() {
         return hasSignedUp;
     }
 
     public void setHasSignedUp(OptionalBoolean hasSignedUp) {
-        this.hasSignedUp = hasSignedUp;
+        this.hasSignedUp = hasSignedUp.getBoolean();
     }
 
     public UserAccountDto getKakaoAccount() {
@@ -59,12 +59,12 @@ public class KakaoMeDto implements Serializable {
         this.forPartners = forPartners;
     }
 
-    public String getNickname() {
-        return nickname;
+    public String getNickName() {
+        return nickName;
     }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public String getThumbnailImagePath() {

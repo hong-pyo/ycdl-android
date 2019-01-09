@@ -4,6 +4,7 @@ import com.kakao.network.response.ResponseBody;
 import com.kakao.usermgmt.StringSet;
 import com.kakao.usermgmt.response.model.AgeRange;
 import com.kakao.usermgmt.response.model.Gender;
+import com.kakao.usermgmt.response.model.UserAccount;
 import com.kakao.util.OptionalBoolean;
 import org.json.JSONObject;
 
