@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-        android:layout_height="match_parent" android:fitsSystemWindows="true"
-        tools:context=".speak.SpeakActivity">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
 
-    <include layout="@layout/content_speack" />
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_weight="10"
+            >
 
+        <LinearLayout
+                android:id="@+id/speak_background_image_view"
+                android:layout_width="fill_parent"
+                android:layout_height="450dp"
+                android:orientation="vertical"
+                android:background="@drawable/blueback"
+                android:layout_weight="9"
+        >
 
-</android.support.design.widget.CoordinatorLayout>
+            <TextView
+                    android:id="@+id/speak_view_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
+                    android:text="CLick Button"
+                    android:textSize="30sp"
+            />
+        </LinearLayout>
+        <Button
+                android:id="@+id/speak_voice_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_weight="1"
+                android:layout_marginBottom="10dp"
+                android:text="음성 확인하기"
+        />
+
+    </LinearLayout>
+</LinearLayout>

@@ -17,6 +17,7 @@ import com.hong2.ycdl.R;
 import com.hong2.ycdl.common.user.KakaoMeDto;
 import com.hong2.ycdl.common.widget.KakaoToast;
 import com.hong2.ycdl.speak.SpeakActivity;
+import com.hong2.ycdl.video.ListenActivity;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -47,6 +48,13 @@ public class HomeActivity extends Activity {
         intent = getIntent();
         kakaoMeDto = (KakaoMeDto) intent.getSerializableExtra("kakaoMe");
 
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent videoIntent = new Intent(getApplicationContext(), ListenActivity.class);
+                startActivity(videoIntent);
+            }
+        });
 
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override

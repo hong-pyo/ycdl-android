@@ -75,11 +75,7 @@ public class SpeakActivity extends Activity {
 
         @Override
         public void onResults(Bundle results) {
-            String key= SpeechRecognizer.RESULTS_RECOGNITION;
-            ArrayList<String> mResult = results.getStringArrayList(key);
-            String[] rs = new String[mResult.size()];
-            mResult.toArray(rs);
-            speak_view.setText(""+rs[0]);
+            setSpeakText(results);
         }
 
         @Override
@@ -90,6 +86,14 @@ public class SpeakActivity extends Activity {
         public void onEvent(int eventType, Bundle params) {
         }
     };
+
+    private void setSpeakText(Bundle results) {
+        String key= SpeechRecognizer.RESULTS_RECOGNITION;
+        ArrayList<String> mResult = results.getStringArrayList(key);
+        String[] rs = new String[mResult.size()];
+        mResult.toArray(rs);
+        speak_view.setText(rs[0]);
+    }
 
     public void pinkColor(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {

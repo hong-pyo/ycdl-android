@@ -8,8 +8,8 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
     <!-- 연령인증 sms -->
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
     <application
             android:name=".common.GlobalApplication"
@@ -38,6 +38,8 @@
                 android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity android:name=".speak.SpeakActivity">
+        </activity>
+        <activity android:name=".video.ListenActivity">
         </activity>
     </application>
 

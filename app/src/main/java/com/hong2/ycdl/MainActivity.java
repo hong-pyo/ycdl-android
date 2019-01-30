@@ -78,13 +78,19 @@ public class MainActivity extends Activity {
                 Intent intent = new Intent(from, to);
                 kakaoMeDto.setNickName(result.getNickname());
                 kakaoMeDto.setId(result.getId());
-                kakaoMeDto.setProfileImagePath(result.getProfileImagePath());
-                kakaoMeDto.setThumbnailImagePath(result.getThumbnailImagePath());
+                if (isNotNullImage(result)) {
+                    kakaoMeDto.setProfileImagePath(result.getProfileImagePath());
+                    kakaoMeDto.setThumbnailImagePath(result.getThumbnailImagePath());
+                }
                 kakaoMeDto.setHasSignedUp(result.hasSignedUp());
                 intent.putExtra("kakaoMe", kakaoMeDto);
                 startActivity(intent);
                 finish();
             }
         });
+    }
+
+    private boolean isNotNullImage(MeV2Response result) {
+        return result.getProfileImagePath() != null || result.getThumbnailImagePath() != null;
     }
 }
