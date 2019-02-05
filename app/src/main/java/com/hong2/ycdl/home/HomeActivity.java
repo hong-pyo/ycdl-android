@@ -13,15 +13,18 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.hong2.ycdl.R;
 import com.hong2.ycdl.common.user.KakaoMeDto;
 import com.hong2.ycdl.common.widget.KakaoToast;
 import com.hong2.ycdl.speak.SpeakActivity;
 import com.hong2.ycdl.video.ListenActivity;
+import com.hong2.ycdl.video.VideoCategory;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.hong2.ycdl.common.global.NetworkConstant.YCDL_SERVER_URL;
 
@@ -32,6 +35,7 @@ public class HomeActivity extends Activity {
     private KakaoMeDto kakaoMeDto;
     private TextView titleBar;
     private Button btn1, btn2, btn3, btn4;
+    private VideoCategory category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,7 @@ public class HomeActivity extends Activity {
 
         String welcomeUrl = YCDL_SERVER_URL + "/welcome";
         String signUpUrl = YCDL_SERVER_URL + "/kakao/sign-up";
+        final String videoListUrl = YCDL_SERVER_URL + "/video/category/all";
         queue = Volley.newRequestQueue(this);
 
         intent = getIntent();
@@ -51,8 +56,9 @@ public class HomeActivity extends Activity {
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent videoIntent = new Intent(getApplicationContext(), ListenActivity.class);
-                startActivity(videoIntent);
+                StringRequest requestVideoList = requestVideoList(videoListUrl);
+                //requestVideoList(videoListUrl);
+                queue.add(requestVideoList);
             }
         });
 
@@ -64,14 +70,53 @@ public class HomeActivity extends Activity {
             }
         });
 
-        StringRequest stringRequest = getWelcomeCondition(welcomeUrl);
+        StringRequest requestWelcomeParam = requestWelcome(welcomeUrl);
         if (kakaoMeDto.getHasSignedUp()) {
             Gson gson = new Gson();
             String params = gson.toJson(kakaoMeDto);
             queue.add(requestSignUp(params, signUpUrl));
         }
-        stringRequest.setTag("MAIN");
-        queue.add(stringRequest);
+        requestWelcomeParam.setTag("MAIN");
+        queue.add(requestWelcomeParam);
+
+    }
+
+    @NonNull
+    private JsonObjectRequest request(final String url) {
+        return new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+    }
+
+    @NonNull
+    private StringRequest requestVideoList(String videoListUrl) {
+        return new StringRequest(Request.Method.GET, videoListUrl, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Gson gson = new Gson();
+                category = gson.fromJson(response, VideoCategory.class);
+
+                Intent videoIntent = new Intent(getApplicationContext(), ListenActivity.class);
+                videoIntent.putExtra("rData", category);
+                videoIntent.putStringArrayListExtra("videoList", (ArrayList<String>) category.getrData());
+                startActivity(videoIntent);
+                finish();
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                KakaoToast.makeToast(getApplicationContext(), "video category get fail", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
    @NonNull
@@ -89,7 +134,7 @@ public class HomeActivity extends Activity {
    }
 
     @NonNull
-    private StringRequest getWelcomeCondition(final String url) {
+    private StringRequest requestWelcome(final String url) {
         return new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
