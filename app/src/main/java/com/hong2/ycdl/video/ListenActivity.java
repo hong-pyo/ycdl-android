@@ -7,19 +7,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import com.hong2.ycdl.R;
 import com.hong2.ycdl.common.global.RCodeContant;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ListenActivity extends Activity {
     /* Xml Control */
     private ListView listView;
-    private TextView outPut;
-    private String data;
     private List<String> videoList;
     private Intent intent;
 
@@ -31,9 +27,13 @@ public class ListenActivity extends Activity {
         listView = findViewById(R.id.listen_listView);
 
         intent = getIntent();
-        VideoCategory categoryList = (VideoCategory) intent.getSerializableExtra("rData");
-
-        List<String> videoList = (List<String>) intent.getSerializableExtra("videoList");
+        VideoCategoryDto categoryList = (VideoCategoryDto) intent.getSerializableExtra("videoList");
+        final List<VideoCategory> categories = categoryList.getrData();
+        if (isAvailableInputData(categoryList, categories)) {
+            for (int i = 0; i<categories.size(); i++) {
+                videoList.add(categories.get(i).getDisplayTitle());
+            }
+        }
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this
@@ -42,13 +42,15 @@ public class ListenActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Intent videoPlayActivity = new Intent(getApplicationContext(), VideoPlayActivity.class);
+                videoPlayActivity.putExtra("videoPosition", categories.get(position));
+                startActivity(videoPlayActivity);
             }
         });
         listView.setAdapter(adapter);
     }
 
-    private boolean isAvailableInputData(VideoCategory categoryList, List<String> videoList) {
-        return categoryList.getrCode().equals(RCodeContant.CODE.SUCCESS) && videoList != null;
+    private boolean isAvailableInputData(VideoCategoryDto categoryList, List<VideoCategory> categories) {
+        return RCodeContant.CODE.SUCCESS.equals(categoryList.getrCode()) && categories != null;
     }
 }

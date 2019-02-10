@@ -1,10 +1,23 @@
 package com.hong2.ycdl.video;
 
-import com.hong2.ycdl.common.global.ResponseBase;
 
 import java.io.Serializable;
-import java.util.List;
 
-public class VideoCategory extends ResponseBase<List<String>> implements Serializable {
 
+public class VideoCategory implements Serializable {
+    private Long idx;
+    private String name;
+    private String displayTitle;
+
+    public Long getIdx() {
+        return idx;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDisplayTitle() {
+        return displayTitle;
+    }
 }

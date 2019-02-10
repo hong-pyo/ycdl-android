@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import com.hong2.ycdl.common.user.KakaoMeDto;
+import com.hong2.ycdl.common.user.UserInfo;
 import com.hong2.ycdl.home.HomeActivity;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
@@ -83,6 +84,8 @@ public class MainActivity extends Activity {
                     kakaoMeDto.setThumbnailImagePath(result.getThumbnailImagePath());
                 }
                 kakaoMeDto.setHasSignedUp(result.hasSignedUp());
+                UserInfo.setIdx(kakaoMeDto.getId());
+                UserInfo.setNickName(kakaoMeDto.getNickName());
                 intent.putExtra("kakaoMe", kakaoMeDto);
                 startActivity(intent);
                 finish();

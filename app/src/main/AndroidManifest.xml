@@ -41,6 +41,8 @@
         </activity>
         <activity android:name=".video.ListenActivity">
         </activity>
+        <activity android:name=".video.VideoPlayActivity">
+        </activity>
     </application>
 
 </manifest>

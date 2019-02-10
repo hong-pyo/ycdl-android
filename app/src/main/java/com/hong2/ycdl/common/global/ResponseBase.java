@@ -1,8 +1,10 @@
 package com.hong2.ycdl.common.global;
 
 
+import java.io.Serializable;
+
 @SuppressWarnings("PMD.UnusedPrivateField")
-public abstract class ResponseBase<T> {
+public abstract class ResponseBase<T>  implements Serializable {
 
     private String rCode = RCodeContant.CODE.SUCCESS;
 

@@ -13,17 +13,15 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.hong2.ycdl.R;
 import com.hong2.ycdl.common.user.KakaoMeDto;
 import com.hong2.ycdl.common.widget.KakaoToast;
 import com.hong2.ycdl.speak.SpeakActivity;
 import com.hong2.ycdl.video.ListenActivity;
-import com.hong2.ycdl.video.VideoCategory;
+import com.hong2.ycdl.video.VideoCategoryDto;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static com.hong2.ycdl.common.global.NetworkConstant.YCDL_SERVER_URL;
@@ -35,7 +33,7 @@ public class HomeActivity extends Activity {
     private KakaoMeDto kakaoMeDto;
     private TextView titleBar;
     private Button btn1, btn2, btn3, btn4;
-    private VideoCategory category;
+    private VideoCategoryDto category;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +54,7 @@ public class HomeActivity extends Activity {
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StringRequest requestVideoList = requestVideoList(videoListUrl);
-                //requestVideoList(videoListUrl);
-                queue.add(requestVideoList);
+                queue.add(requestVideoList(videoListUrl));
             }
         });
 
@@ -82,33 +78,16 @@ public class HomeActivity extends Activity {
     }
 
     @NonNull
-    private JsonObjectRequest request(final String url) {
-        return new JsonObjectRequest(Request.Method.POST, url, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-    }
-
-    @NonNull
     private StringRequest requestVideoList(String videoListUrl) {
         return new StringRequest(Request.Method.GET, videoListUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Gson gson = new Gson();
-                category = gson.fromJson(response, VideoCategory.class);
+                category = gson.fromJson(response, VideoCategoryDto.class);
 
                 Intent videoIntent = new Intent(getApplicationContext(), ListenActivity.class);
-                videoIntent.putExtra("rData", category);
-                videoIntent.putStringArrayListExtra("videoList", (ArrayList<String>) category.getrData());
+                videoIntent.putExtra("videoList",  category);
                 startActivity(videoIntent);
-                finish();
 
             }
         }, new Response.ErrorListener() {
