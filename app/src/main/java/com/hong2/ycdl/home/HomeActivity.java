@@ -14,14 +14,15 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.hong2.ycdl.R;
+import com.hong2.ycdl.common.global.IntentConstant;
 import com.hong2.ycdl.common.user.KakaoMeDto;
 import com.hong2.ycdl.common.widget.KakaoToast;
 import com.hong2.ycdl.speak.SpeakActivity;
+import com.hong2.ycdl.util.HongGsonUtil;
 import com.hong2.ycdl.video.ListenActivity;
 import com.hong2.ycdl.video.VideoCategoryDto;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.*;
 
 import static com.hong2.ycdl.common.global.NetworkConstant.YCDL_SERVER_URL;
@@ -49,7 +50,7 @@ public class HomeActivity extends Activity {
         queue = Volley.newRequestQueue(this);
 
         intent = getIntent();
-        kakaoMeDto = (KakaoMeDto) intent.getSerializableExtra("kakaoMe");
+        kakaoMeDto = (KakaoMeDto) intent.getSerializableExtra(IntentConstant.MEMBER.KAKAO_REQUEST);
 
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,8 +69,7 @@ public class HomeActivity extends Activity {
 
         StringRequest requestWelcomeParam = requestWelcome(welcomeUrl);
         if (kakaoMeDto.getHasSignedUp()) {
-            Gson gson = new Gson();
-            String params = gson.toJson(kakaoMeDto);
+            String params = HongGsonUtil.getGsonString(kakaoMeDto);
             queue.add(requestSignUp(params, signUpUrl));
         }
         requestWelcomeParam.setTag("MAIN");
@@ -86,7 +86,7 @@ public class HomeActivity extends Activity {
                 category = gson.fromJson(response, VideoCategoryDto.class);
 
                 Intent videoIntent = new Intent(getApplicationContext(), ListenActivity.class);
-                videoIntent.putExtra("videoList",  category);
+                videoIntent.putExtra(IntentConstant.VIDEO.VIDEO_LIST,  category);
                 startActivity(videoIntent);
 
             }

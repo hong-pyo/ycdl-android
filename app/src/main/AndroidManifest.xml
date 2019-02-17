@@ -43,6 +43,8 @@
         </activity>
         <activity android:name=".video.VideoPlayActivity">
         </activity>
+        <activity android:name=".video.VideoManageActivity">
+        </activity>
     </application>
 
 </manifest>

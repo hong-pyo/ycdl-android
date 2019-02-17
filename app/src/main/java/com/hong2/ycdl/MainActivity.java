@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import com.hong2.ycdl.common.global.IntentConstant;
 import com.hong2.ycdl.common.user.KakaoMeDto;
 import com.hong2.ycdl.common.user.UserInfo;
 import com.hong2.ycdl.home.HomeActivity;
@@ -86,7 +87,7 @@ public class MainActivity extends Activity {
                 kakaoMeDto.setHasSignedUp(result.hasSignedUp());
                 UserInfo.setIdx(kakaoMeDto.getId());
                 UserInfo.setNickName(kakaoMeDto.getNickName());
-                intent.putExtra("kakaoMe", kakaoMeDto);
+                intent.putExtra(IntentConstant.MEMBER.KAKAO_REQUEST, kakaoMeDto);
                 startActivity(intent);
                 finish();
             }

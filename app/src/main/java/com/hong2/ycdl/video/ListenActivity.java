@@ -8,6 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.hong2.ycdl.R;
+import com.hong2.ycdl.common.global.IntentConstant;
 import com.hong2.ycdl.common.global.RCodeContant;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class ListenActivity extends Activity {
         listView = findViewById(R.id.listen_listView);
 
         intent = getIntent();
-        VideoCategoryDto categoryList = (VideoCategoryDto) intent.getSerializableExtra("videoList");
+        VideoCategoryDto categoryList = (VideoCategoryDto) intent.getSerializableExtra(IntentConstant.VIDEO.VIDEO_LIST);
         final List<VideoCategory> categories = categoryList.getrData();
         if (isAvailableInputData(categoryList, categories)) {
             for (int i = 0; i<categories.size(); i++) {
@@ -43,7 +44,7 @@ public class ListenActivity extends Activity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent videoPlayActivity = new Intent(getApplicationContext(), VideoPlayActivity.class);
-                videoPlayActivity.putExtra("videoPosition", categories.get(position));
+                videoPlayActivity.putExtra(IntentConstant.VIDEO.CATEGORY, categories.get(position));
                 startActivity(videoPlayActivity);
             }
         });
