@@ -10,6 +10,7 @@ import android.widget.ListView;
 import com.hong2.ycdl.R;
 import com.hong2.ycdl.common.global.IntentConstant;
 import com.hong2.ycdl.common.global.RCodeContant;
+import com.hong2.ycdl.video.dto.VideoCategoryDto;
 
 import java.util.ArrayList;
 import java.util.List;

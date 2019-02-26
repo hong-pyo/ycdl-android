@@ -12,7 +12,6 @@ import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
 import com.hong2.ycdl.R;
 import com.hong2.ycdl.common.global.IntentConstant;
 import com.hong2.ycdl.common.user.KakaoMeDto;
@@ -20,7 +19,7 @@ import com.hong2.ycdl.common.widget.KakaoToast;
 import com.hong2.ycdl.speak.SpeakActivity;
 import com.hong2.ycdl.util.HongGsonUtil;
 import com.hong2.ycdl.video.ListenActivity;
-import com.hong2.ycdl.video.VideoCategoryDto;
+import com.hong2.ycdl.video.dto.VideoCategoryDto;
 import org.json.JSONObject;
 
 import java.util.*;
@@ -32,6 +31,7 @@ public class HomeActivity extends Activity {
     private RequestQueue queue;
     private Intent intent;
     private KakaoMeDto kakaoMeDto;
+    
     private TextView titleBar;
     private Button btn1, btn2, btn3, btn4;
     private VideoCategoryDto category;
@@ -82,8 +82,7 @@ public class HomeActivity extends Activity {
         return new StringRequest(Request.Method.GET, videoListUrl, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Gson gson = new Gson();
-                category = gson.fromJson(response, VideoCategoryDto.class);
+                category = HongGsonUtil.fromJson(response, VideoCategoryDto.class);
 
                 Intent videoIntent = new Intent(getApplicationContext(), ListenActivity.class);
                 videoIntent.putExtra(IntentConstant.VIDEO.VIDEO_LIST,  category);

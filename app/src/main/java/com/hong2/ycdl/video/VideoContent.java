@@ -33,4 +33,28 @@ public class VideoContent implements Serializable {
     public void setVideoCategory(VideoCategory videoCategory) {
         this.videoCategory = videoCategory;
     }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getQuestion() {
+        return question;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public String getLink() {
+        return link;
+    }
+
+    public Long getLevel() {
+        return level;
+    }
+
+    public VideoCategory getVideoCategory() {
+        return videoCategory;
+    }
 }
