@@ -20,6 +20,11 @@ import com.hong2.ycdl.speak.SpeakActivity;
 import com.hong2.ycdl.util.HongGsonUtil;
 import com.hong2.ycdl.video.ListenActivity;
 import com.hong2.ycdl.video.dto.VideoCategoryDto;
+import com.kakao.kakaolink.v2.KakaoLinkResponse;
+import com.kakao.kakaolink.v2.KakaoLinkService;
+import com.kakao.message.template.*;
+import com.kakao.network.ErrorResult;
+import com.kakao.network.callback.ResponseCallback;
 import org.json.JSONObject;
 
 import java.util.*;
@@ -34,6 +39,7 @@ public class HomeActivity extends Activity {
     
     private TextView titleBar;
     private Button btn1, btn2, btn3, btn4;
+    private FeedTemplate feedTemplate;
     private VideoCategoryDto category;
 
     @Override
@@ -43,6 +49,7 @@ public class HomeActivity extends Activity {
         titleBar = findViewById(R.id.welcome_textView);
         btn1 = findViewById(R.id.listen_menu_button);
         btn2 = findViewById(R.id.speak_menu_button);
+        btn4 = findViewById(R.id.etc_menu_button);
 
         String welcomeUrl = YCDL_SERVER_URL + "/welcome";
         String signUpUrl = YCDL_SERVER_URL + "/kakao/sign-up";
@@ -67,6 +74,24 @@ public class HomeActivity extends Activity {
             }
         });
 
+        btn4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                KakaoLinkService.getInstance().sendDefault(getApplicationContext(), getKakaoLinkFeedType(),
+                        null, new ResponseCallback<KakaoLinkResponse>() {
+                    @Override
+                    public void onFailure(ErrorResult errorResult) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(KakaoLinkResponse result) {
+                        result.getTemplateId();
+                    }
+                });
+            }
+        });
+
         StringRequest requestWelcomeParam = requestWelcome(welcomeUrl);
         if (kakaoMeDto.getHasSignedUp()) {
             String params = HongGsonUtil.getGsonString(kakaoMeDto);
@@ -75,6 +100,22 @@ public class HomeActivity extends Activity {
         requestWelcomeParam.setTag("MAIN");
         queue.add(requestWelcomeParam);
 
+    }
+
+    private FeedTemplate getKakaoLinkFeedType() {
+        FeedTemplate params = FeedTemplate
+                .newBuilder(ContentObject.newBuilder("YCDL 알리기 ",
+                        "http://k.kakaocdn.net/dn/4Gh9a/btqs1Q4Jn6u/zBCbKIpCaSxdqioDcZH8fk/kakaolink40_original.png",
+                        LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
+                                .setMobileWebUrl("https://developers.kakao.com").build())
+                        .setDescrption("구화 학습 동영상")
+                        .build())
+                //.setSocial(SocialObject.newBuilder().setLikeCount(10).setCommentCount(20).setSharedCount(30).setViewCount(40).build())
+                //.addButton(new ButtonObject("웹에서 보기", LinkObject.newBuilder().setWebUrl("'https://developers.kakao.com").setMobileWebUrl("'https://developers.kakao.com").build()))
+                //.addButton(new ButtonObject("앱에서 보기", LinkObject.newBuilder().setWebUrl("'https://developers.kakao.com").setMobileWebUrl("'https://developers.kakao.com").setAndroidExecutionParams("key1=value1").setIosExecutionParams("key1=value1")                 .build()))
+                .build();
+
+        return params;
     }
 
     @NonNull
