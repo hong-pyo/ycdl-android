@@ -1,6 +1,8 @@
 package com.hong2.ycdl.home;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -25,6 +27,7 @@ import com.kakao.kakaolink.v2.KakaoLinkService;
 import com.kakao.message.template.*;
 import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.*;
@@ -49,11 +52,13 @@ public class HomeActivity extends Activity {
         titleBar = findViewById(R.id.welcome_textView);
         btn1 = findViewById(R.id.listen_menu_button);
         btn2 = findViewById(R.id.speak_menu_button);
+        btn3 = findViewById(R.id.temp_button);
         btn4 = findViewById(R.id.etc_menu_button);
 
         String welcomeUrl = YCDL_SERVER_URL + "/welcome";
         String signUpUrl = YCDL_SERVER_URL + "/kakao/sign-up";
         final String videoListUrl = YCDL_SERVER_URL + "/video/category/all";
+        final String linkMessageURl = YCDL_SERVER_URL + "/kakao/link";
         queue = Volley.newRequestQueue(this);
 
         intent = getIntent();
@@ -74,21 +79,32 @@ public class HomeActivity extends Activity {
             }
         });
 
+        btn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog alertDialog = new AlertDialog.Builder(HomeActivity.this).create();
+                alertDialog.setTitle("YCDL");
+                alertDialog.setMessage(
+                        "YCDL 을 이용해 주셔서 감사합니다. \n" +
+                        "새로운 아이템을 위해서 아이디어를 내주시면 감사하겠습니다. \n" +
+                        "email : hong2_dev@naver.com");
+                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                alertDialog.show();
+            }
+        });
+
         btn4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                KakaoLinkService.getInstance().sendDefault(getApplicationContext(), getKakaoLinkFeedType(),
-                        null, new ResponseCallback<KakaoLinkResponse>() {
-                    @Override
-                    public void onFailure(ErrorResult errorResult) {
-
-                    }
-
-                    @Override
-                    public void onSuccess(KakaoLinkResponse result) {
-                        result.getTemplateId();
-                    }
-                });
+                if (kakaoMeDto.getHasSignedUp()) {
+                    String params = HongGsonUtil.getGsonString(kakaoMeDto);
+                    queue.add(requestLinkMessage(params, linkMessageURl));
+                }
             }
         });
 
@@ -102,13 +118,13 @@ public class HomeActivity extends Activity {
 
     }
 
-    private FeedTemplate getKakaoLinkFeedType() {
+    private FeedTemplate getKakaoLinkFeedType(LinkMessage linkMessage) {
         FeedTemplate params = FeedTemplate
-                .newBuilder(ContentObject.newBuilder("YCDL 알리기 ",
-                        "http://k.kakaocdn.net/dn/4Gh9a/btqs1Q4Jn6u/zBCbKIpCaSxdqioDcZH8fk/kakaolink40_original.png",
-                        LinkObject.newBuilder().setWebUrl("https://developers.kakao.com")
-                                .setMobileWebUrl("https://developers.kakao.com").build())
-                        .setDescrption("구화 학습 동영상")
+                .newBuilder(ContentObject.newBuilder(linkMessage.getTitle(),
+                        linkMessage.getImageUrl(),
+                        LinkObject.newBuilder().setWebUrl(linkMessage.getWebUrl())
+                                .setMobileWebUrl(linkMessage.getAppUrl()).build())
+                        .setDescrption(linkMessage.getDescription())
                         .build())
                 //.setSocial(SocialObject.newBuilder().setLikeCount(10).setCommentCount(20).setSharedCount(30).setViewCount(40).build())
                 //.addButton(new ButtonObject("웹에서 보기", LinkObject.newBuilder().setWebUrl("'https://developers.kakao.com").setMobileWebUrl("'https://developers.kakao.com").build()))
@@ -134,6 +150,38 @@ public class HomeActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 KakaoToast.makeToast(getApplicationContext(), "video category get fail", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    @NonNull
+    private JsonObjectRequest requestLinkMessage(String params, final String url) {
+        return new JsonObjectRequest(Request.Method.POST, url, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String result = response.getString("rData");
+                    LinkMessage linkMessage = HongGsonUtil.fromJson(result, LinkMessage.class);
+                    KakaoLinkService.getInstance().sendDefault(getApplicationContext(), getKakaoLinkFeedType(linkMessage),
+                            null, new ResponseCallback<KakaoLinkResponse>() {
+                                @Override
+                                public void onFailure(ErrorResult errorResult) {
+
+                                }
+
+                                @Override
+                                public void onSuccess(KakaoLinkResponse result) {
+                                    result.getTemplateId();
+                                }
+                            });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
             }
         });
     }
