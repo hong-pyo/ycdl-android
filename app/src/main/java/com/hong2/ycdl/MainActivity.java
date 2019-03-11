@@ -13,6 +13,7 @@ import com.hong2.ycdl.common.global.IntentConstant;
 import com.hong2.ycdl.common.user.KakaoMeDto;
 import com.hong2.ycdl.common.user.UserInfo;
 import com.hong2.ycdl.home.HomeActivity;
+import com.hong2.ycdl.util.HongStringUtil;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
@@ -92,7 +93,11 @@ public class MainActivity extends Activity {
                 }
                 kakaoMeDto.setHasSignedUp(result.hasSignedUp());
                 UserInfo.setIdx(kakaoMeDto.getId());
-                UserInfo.setNickName(kakaoMeDto.getNickName());
+                if (!HongStringUtil.isBlank(kakaoMeDto.getNickName())) {
+                    UserInfo.setNickName(kakaoMeDto.getNickName());
+                } else {
+                    UserInfo.setNickName("YCDL");
+                }
                 intent.putExtra(IntentConstant.MEMBER.KAKAO_REQUEST, kakaoMeDto);
                 startActivity(intent);
                 finish();

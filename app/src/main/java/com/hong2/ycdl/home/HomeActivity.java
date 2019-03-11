@@ -14,6 +14,7 @@ import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.hong2.ycdl.BuildConfig;
 import com.hong2.ycdl.R;
 import com.hong2.ycdl.common.global.IntentConstant;
 import com.hong2.ycdl.common.user.KakaoMeDto;
@@ -59,6 +60,7 @@ public class HomeActivity extends Activity {
         String signUpUrl = YCDL_SERVER_URL + "/kakao/sign-up";
         final String videoListUrl = YCDL_SERVER_URL + "/video/category/all";
         final String linkMessageURl = YCDL_SERVER_URL + "/kakao/link";
+        final String alertMessageUrl = YCDL_SERVER_URL + "/alertMessage";
         queue = Volley.newRequestQueue(this);
 
         intent = getIntent();
@@ -82,19 +84,8 @@ public class HomeActivity extends Activity {
         btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog alertDialog = new AlertDialog.Builder(HomeActivity.this).create();
-                alertDialog.setTitle("YCDL");
-                alertDialog.setMessage(
-                        "YCDL 을 이용해 주셔서 감사합니다. \n" +
-                        "새로운 아이템을 위해서 아이디어를 내주시면 감사하겠습니다. \n" +
-                        "email : hong2_dev@naver.com");
-                alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                alertDialog.show();
+                String params = HongGsonUtil.getGsonString(Double.valueOf(BuildConfig.VERSION_NAME));
+                queue.add(requestAlertMessage(params, alertMessageUrl));
             }
         });
 
@@ -122,7 +113,8 @@ public class HomeActivity extends Activity {
         FeedTemplate params = FeedTemplate
                 .newBuilder(ContentObject.newBuilder(linkMessage.getTitle(),
                         linkMessage.getImageUrl(),
-                        LinkObject.newBuilder().setWebUrl(linkMessage.getWebUrl())
+                        LinkObject.newBuilder()
+                                .setWebUrl(linkMessage.getWebUrl())
                                 .setMobileWebUrl(linkMessage.getAppUrl()).build())
                         .setDescrption(linkMessage.getDescription())
                         .build())
@@ -150,6 +142,35 @@ public class HomeActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 KakaoToast.makeToast(getApplicationContext(), "video category get fail", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private JsonObjectRequest requestAlertMessage(String params, final String url) {
+        return new JsonObjectRequest(Request.Method.POST, url, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    String result = response.getString("rData");
+                    AlertMessage alertMessage = HongGsonUtil.fromJson(result, AlertMessage.class);
+                    AlertDialog alertDialog = new AlertDialog.Builder(HomeActivity.this).create();
+                    alertDialog.setTitle(alertMessage.getTitle());
+                    alertDialog.setMessage(alertMessage.getMessage());
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+                    alertDialog.show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
             }
         });
     }
