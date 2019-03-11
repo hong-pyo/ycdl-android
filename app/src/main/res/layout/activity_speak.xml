@@ -12,7 +12,12 @@
             android:paddingRight="10dp"
             android:layout_weight="10"
             >
-
+        <TextView
+                android:id="@+id/audio_policy"
+                android:text="오디오 권한 정책"
+                android:layout_marginBottom="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         <LinearLayout
                 android:id="@+id/speak_background_image_view"
                 android:layout_width="fill_parent"
@@ -32,6 +37,7 @@
                     android:textSize="30sp"
             />
         </LinearLayout>
+
         <Button
                 android:id="@+id/speak_voice_btn"
                 android:layout_width="fill_parent"
