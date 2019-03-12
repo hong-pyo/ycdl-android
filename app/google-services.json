@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:893448519278:android:40af401e1bed9d55",
         "android_client_info": {
-          "package_name": "com.hong2.ycdl"
+          "package_name": "com.hong2.ycdl2"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "893448519278-isl2id20hn35mrq9f1qs2d5k1g4ka6l6.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.hong2.ycdl",
+            "package_name": "com.hong2.ycdl2",
             "certificate_hash": "d36f1f3b1ede8e67ea53f7f4770bb1be99ea40c1"
           }
         },
