@@ -14,7 +14,7 @@ import com.google.android.youtube.player.YouTubePlayerView;
 import com.hong2.ycdl2.R;
 import com.hong2.ycdl2.common.global.IntentConstant;
 import com.hong2.ycdl2.common.user.UserInfo;
-import com.hong2.ycdl2.common.util.VideoUtil;
+import com.hong2.ycdl2.util.VideoUtil;
 import com.hong2.ycdl2.common.widget.KakaoToast;
 import com.hong2.ycdl2.util.HongStringUtil;
 

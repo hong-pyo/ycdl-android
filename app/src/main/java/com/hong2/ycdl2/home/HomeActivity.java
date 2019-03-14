@@ -16,11 +16,15 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.hong2.ycdl2.BuildConfig;
 import com.hong2.ycdl2.R;
+import com.hong2.ycdl2.common.global.ErrorResultDto;
 import com.hong2.ycdl2.common.global.IntentConstant;
+import com.hong2.ycdl2.common.global.RCodeContant;
+import com.hong2.ycdl2.common.global.UrlConstant;
 import com.hong2.ycdl2.common.user.KakaoMeDto;
 import com.hong2.ycdl2.common.widget.KakaoToast;
 import com.hong2.ycdl2.speak.SpeakActivity;
 import com.hong2.ycdl2.util.HongGsonUtil;
+import com.hong2.ycdl2.util.VolleyNetworkUtil;
 import com.hong2.ycdl2.video.ListenActivity;
 import com.hong2.ycdl2.video.dto.VideoCategoryDto;
 import com.kakao.kakaolink.v2.KakaoLinkResponse;
@@ -56,11 +60,7 @@ public class HomeActivity extends Activity {
         btn3 = findViewById(R.id.temp_button);
         btn4 = findViewById(R.id.etc_menu_button);
 
-        String welcomeUrl = YCDL_SERVER_URL + "/welcome";
-        String signUpUrl = YCDL_SERVER_URL + "/kakao/sign-up";
-        final String videoListUrl = YCDL_SERVER_URL + "/video/category/all";
-        final String linkMessageURl = YCDL_SERVER_URL + "/kakao/link";
-        final String alertMessageUrl = YCDL_SERVER_URL + "/alertMessage";
+
         queue = Volley.newRequestQueue(this);
 
         intent = getIntent();
@@ -69,7 +69,7 @@ public class HomeActivity extends Activity {
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                queue.add(requestVideoList(videoListUrl));
+                queue.add(requestVideoList(UrlConstant.VIDEO_LIST));
             }
         });
 
@@ -85,7 +85,7 @@ public class HomeActivity extends Activity {
             @Override
             public void onClick(View v) {
                 String params = HongGsonUtil.getGsonString(Double.valueOf(BuildConfig.VERSION_NAME));
-                queue.add(requestAlertMessage(params, alertMessageUrl));
+                queue.add(requestAlertMessage(params, UrlConstant.ALERT_MESSAGE));
             }
         });
 
@@ -94,15 +94,14 @@ public class HomeActivity extends Activity {
             public void onClick(View v) {
                 if (kakaoMeDto.getHasSignedUp()) {
                     String params = HongGsonUtil.getGsonString(kakaoMeDto);
-                    queue.add(requestLinkMessage(params, linkMessageURl));
+                    queue.add(requestLinkMessage(params, UrlConstant.LINK_MESSAGE));
                 }
             }
         });
 
-        StringRequest requestWelcomeParam = requestWelcome(welcomeUrl);
+        StringRequest requestWelcomeParam = requestWelcome(UrlConstant.WELCOME);
         if (kakaoMeDto.getHasSignedUp()) {
-            String params = HongGsonUtil.getGsonString(kakaoMeDto);
-            queue.add(requestSignUp(params, signUpUrl));
+            queue.add(VolleyNetworkUtil.simplePostRequest(kakaoMeDto, UrlConstant.SIGN_UP));
         }
         requestWelcomeParam.setTag("MAIN");
         queue.add(requestWelcomeParam);
@@ -207,20 +206,6 @@ public class HomeActivity extends Activity {
         });
     }
 
-   @NonNull
-   private JsonObjectRequest requestSignUp(String params, final String url) {
-        return new JsonObjectRequest(Request.Method.POST, url, params, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-   }
-
     @NonNull
     private StringRequest requestWelcome(final String url) {
         return new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -231,6 +216,11 @@ public class HomeActivity extends Activity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                ErrorResultDto errorResult = new ErrorResultDto();
+                errorResult.setErrorCode(RCodeContant.ERROR_CODE.FAIL);
+                errorResult.setErrorMessage(RCodeContant.MSG.VOLLERY_ERR);
+
+                queue.add(VolleyNetworkUtil.simplePostRequest(errorResult, UrlConstant.ERROR));
                 KakaoToast.makeToast(getApplicationContext(), "welcome request fail", Toast.LENGTH_LONG).show();
             }
         }){

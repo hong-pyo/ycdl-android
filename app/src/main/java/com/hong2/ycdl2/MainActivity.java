@@ -9,11 +9,16 @@ import android.content.pm.Signature;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+import com.hong2.ycdl2.common.global.ErrorResultDto;
 import com.hong2.ycdl2.common.global.IntentConstant;
+import com.hong2.ycdl2.common.global.UrlConstant;
 import com.hong2.ycdl2.common.user.KakaoMeDto;
 import com.hong2.ycdl2.common.user.UserInfo;
 import com.hong2.ycdl2.home.HomeActivity;
 import com.hong2.ycdl2.util.HongStringUtil;
+import com.hong2.ycdl2.util.VolleyNetworkUtil;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
@@ -29,11 +34,13 @@ import java.security.MessageDigest;
 public class MainActivity extends Activity {
 
     private SessionCallback callback;
+    private RequestQueue queue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        queue = Volley.newRequestQueue(this);
         callback = new SessionCallback();
         //getAppKeyHash();
         Session.getCurrentSession().addCallback(callback);
@@ -79,7 +86,12 @@ public class MainActivity extends Activity {
 
             @Override
             public void onSessionClosed(ErrorResult errorResult) {
-                Log.d("kakao", "fail kakao request PersonalInfo");
+                ErrorResultDto errorResultDto = new ErrorResultDto();
+                errorResultDto.setErrorMessage(errorResult.getErrorMessage());
+                errorResultDto.setErrorCode(errorResult.getErrorCode());
+
+                queue.add(VolleyNetworkUtil.simplePostRequest(errorResult, UrlConstant.ERROR));
+                Log.e("kakao", "fail kakao request PersonalInfo");
             }
 
             @Override

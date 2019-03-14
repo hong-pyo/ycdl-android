@@ -17,6 +17,7 @@ import com.android.volley.toolbox.Volley;
 import com.hong2.ycdl2.R;
 import com.hong2.ycdl2.common.global.IntentConstant;
 import com.hong2.ycdl2.common.global.RCodeContant;
+import com.hong2.ycdl2.common.global.UrlConstant;
 import com.hong2.ycdl2.common.user.UserInfo;
 import com.hong2.ycdl2.util.HongGsonUtil;
 import com.hong2.ycdl2.video.dto.VideoCategoryDto;
@@ -25,7 +26,6 @@ import com.hong2.ycdl2.video.dto.VideoContentDto;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.hong2.ycdl2.common.global.NetworkConstant.YCDL_SERVER_URL;
 
 public class ListenActivity extends Activity {
     /* Xml Control */
@@ -35,7 +35,6 @@ public class ListenActivity extends Activity {
     private RequestQueue queue;
     private VideoContentDto videoContentDto;
 
-    private String VIDEO_URL = YCDL_SERVER_URL + "/video/link/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +59,7 @@ public class ListenActivity extends Activity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                StringRequest videoRequest = getVideoLink(VIDEO_URL + categories.get(position).getIdx(), categories.get(position));
+                StringRequest videoRequest = getVideoLink(UrlConstant.VIDEO_LINK + categories.get(position).getIdx(), categories.get(position));
                 videoRequest.setTag("VIDEO_LINK");
                 queue.add(videoRequest);
             }

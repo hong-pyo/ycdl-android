@@ -11,13 +11,13 @@ import com.android.volley.*;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.hong2.ycdl2.R;
-import com.hong2.ycdl2.common.util.VideoUtil;
+import com.hong2.ycdl2.common.global.UrlConstant;
+import com.hong2.ycdl2.util.VideoUtil;
 import com.hong2.ycdl2.util.HongGsonUtil;
 import com.hong2.ycdl2.util.HongStringUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.hong2.ycdl2.common.global.NetworkConstant.YCDL_SERVER_URL;
 
 public class VideoManageActivity extends Activity {
     /* Xml Control */
@@ -36,8 +36,6 @@ public class VideoManageActivity extends Activity {
     private TextView categoryResultText;
 
     private RequestQueue queue;
-    private String categoryAddUrl;
-    private String linkAddUrl;
 
     private VideoCategory category;
     @Override
@@ -61,12 +59,7 @@ public class VideoManageActivity extends Activity {
         link_add_url = findViewById(R.id.video_link_add_link_edit);
         link_add_level = findViewById(R.id.video_link_add_level_edit);
 
-        categoryAddUrl = YCDL_SERVER_URL + "/video/category/add";
-        linkAddUrl = YCDL_SERVER_URL + "/video/link/add";
-
         category = VideoUtil.getCategory(getIntent());
-
-
 
         link_add_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +73,7 @@ public class VideoManageActivity extends Activity {
                 videoContent.setVideoCategory(category);
 
                 String params = HongGsonUtil.getGsonString(videoContent);
-                queue.add(addLink(linkAddUrl, params));
+                queue.add(addLink(UrlConstant.LINK_ADD, params));
             }
         });
 
@@ -95,7 +88,7 @@ public class VideoManageActivity extends Activity {
                 }
 
                 String params = HongGsonUtil.getGsonString(videoCategory);
-                queue.add(addCategory(categoryAddUrl, params));
+                queue.add(addCategory(UrlConstant.CATEGORY_ADD, params));
             }
         });
     }

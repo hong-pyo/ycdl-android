@@ -1,4 +1,4 @@
-package com.hong2.ycdl2.common.util;
+package com.hong2.ycdl2.util;
 
 import android.content.Intent;
 import com.hong2.ycdl2.common.global.IntentConstant;
