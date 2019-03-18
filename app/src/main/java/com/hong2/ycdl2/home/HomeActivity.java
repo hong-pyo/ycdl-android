@@ -16,10 +16,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.hong2.ycdl2.BuildConfig;
 import com.hong2.ycdl2.R;
-import com.hong2.ycdl2.common.global.ErrorResultDto;
-import com.hong2.ycdl2.common.global.IntentConstant;
-import com.hong2.ycdl2.common.global.RCodeContant;
-import com.hong2.ycdl2.common.global.UrlConstant;
+import com.hong2.ycdl2.common.global.*;
 import com.hong2.ycdl2.common.user.KakaoMeDto;
 import com.hong2.ycdl2.common.widget.KakaoToast;
 import com.hong2.ycdl2.speak.SpeakActivity;
@@ -32,6 +29,9 @@ import com.kakao.kakaolink.v2.KakaoLinkService;
 import com.kakao.message.template.*;
 import com.kakao.network.ErrorResult;
 import com.kakao.network.callback.ResponseCallback;
+import com.kakao.usermgmt.UserManagement;
+import com.kakao.usermgmt.callback.UnLinkResponseCallback;
+import com.kakao.util.helper.log.Logger;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -60,11 +60,12 @@ public class HomeActivity extends Activity {
         btn3 = findViewById(R.id.temp_button);
         btn4 = findViewById(R.id.etc_menu_button);
 
-
         queue = Volley.newRequestQueue(this);
-
         intent = getIntent();
         kakaoMeDto = (KakaoMeDto) intent.getSerializableExtra(IntentConstant.MEMBER.KAKAO_REQUEST);
+
+        signedCheck();
+
 
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,20 +93,49 @@ public class HomeActivity extends Activity {
         btn4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (kakaoMeDto.getHasSignedUp()) {
-                    String params = HongGsonUtil.getGsonString(kakaoMeDto);
-                    queue.add(requestLinkMessage(params, UrlConstant.LINK_MESSAGE));
-                }
+                String params = HongGsonUtil.getGsonString(kakaoMeDto);
+                queue.add(requestLinkMessage(params, UrlConstant.LINK_MESSAGE));
             }
         });
 
         StringRequest requestWelcomeParam = requestWelcome(UrlConstant.WELCOME);
-        if (kakaoMeDto.getHasSignedUp()) {
-            queue.add(VolleyNetworkUtil.simplePostRequest(kakaoMeDto, UrlConstant.SIGN_UP));
-        }
+        queue.add(VolleyNetworkUtil.simplePostRequest(kakaoMeDto, UrlConstant.SIGN_UP));
+
         requestWelcomeParam.setTag("MAIN");
         queue.add(requestWelcomeParam);
 
+    }
+
+    private void signedCheck() {
+        if (kakaoMeDto == null) {
+            unLink();
+        }
+    }
+
+    private void unLink(){
+        UserManagement.getInstance().requestUnlink(new UnLinkResponseCallback() {
+            @Override
+            public void onFailure(ErrorResult errorResult) {
+                Logger.e(errorResult.toString());
+            }
+
+            @Override
+            public void onSessionClosed(ErrorResult errorResult) {
+            }
+
+            @Override
+            public void onNotSignedUp() {
+                //redirectSignupActivity();
+            }
+
+            @Override
+            public void onSuccess(Long userId) {
+                ErrorResultDto errorResultDto = new ErrorResultDto();
+                errorResultDto.setErrorCode(777);
+                errorResultDto.setErrorMessage(String.valueOf(userId) + "signOut");
+                VolleyNetworkUtil.simplePostRequest(errorResultDto, UrlConstant.ERROR);
+            }
+        });
     }
 
     private FeedTemplate getKakaoLinkFeedType(LinkMessage linkMessage) {

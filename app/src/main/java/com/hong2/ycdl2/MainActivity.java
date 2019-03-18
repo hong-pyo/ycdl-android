@@ -78,9 +78,9 @@ public class MainActivity extends Activity {
     }
 
     protected void redirectSignupActivity() {
-        requestPersonalInfo(this, HomeActivity.class);
+        requestMe(this, HomeActivity.class);
     }
-    private void requestPersonalInfo(final Context from, final Class<?> to) {
+    private void requestMe(final Context from, final Class<?> to) {
         final KakaoMeDto kakaoMeDto = new KakaoMeDto();
         UserManagement.getInstance().me(new MeV2ResponseCallback() {
 
@@ -103,7 +103,6 @@ public class MainActivity extends Activity {
                     kakaoMeDto.setProfileImagePath(result.getProfileImagePath());
                     kakaoMeDto.setThumbnailImagePath(result.getThumbnailImagePath());
                 }
-                kakaoMeDto.setHasSignedUp(result.hasSignedUp());
                 UserInfo.setIdx(kakaoMeDto.getId());
                 if (!HongStringUtil.isBlank(kakaoMeDto.getNickName())) {
                     UserInfo.setNickName(kakaoMeDto.getNickName());
